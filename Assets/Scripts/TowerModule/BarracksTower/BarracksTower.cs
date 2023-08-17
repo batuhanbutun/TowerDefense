@@ -16,10 +16,16 @@ public class BarracksTower : Tower
     private bool isSoldierFree = true;
 
     private int soldierIndex = 0;
-    private int interval = 10;
-    private void Start()
+    private int SetTargetDelay = 10;
+
+    
+    [SerializeField] private TowerSettings barracksTowerSettings;
+    private int soldierDamage;
+    private float soldierFireRate;
+    private void OnEnable()
     {
         towerLevel = 0;
+        TowerInit();
         Attack();
     }
 
@@ -39,14 +45,28 @@ public class BarracksTower : Tower
         {
             soldier.SoldierLevelUp(towerLevel);
         }
+        TowerInit();
+        towerUpgradeCost += toAddTowerUpgradeCost;
+    }
+    
+    public override void Sell()
+    {
+        barracksTowerLevels[towerLevel].SetActive(false);
+        barracksTowerLevels[0].SetActive(true);
+        towerLevel = 0;
+        gameObject.SetActive(false);
+        soldierIndex = 0;
+        foreach (var soldier in soldiers)
+        {
+            soldier.gameObject.SetActive(false);
+        }
     }
     
     public override void Attack()
     {
         soldiers[soldierIndex].gameObject.SetActive(true);
-        soldiers[soldierIndex].Spawn(soldierSwapningPos,soldierFightPositions[0]);
+        soldiers[soldierIndex].Spawn(soldierSwapningPos,soldierFightPositions[soldierIndex]);
         soldierIndex++;
-        soldierFightPositions.Remove(soldierFightPositions[0]);
     }
 
     private void SetTargetForSoldiers()
@@ -60,7 +80,7 @@ public class BarracksTower : Tower
                 {
                     if (!enemy.GetComponent<EnemyMovement>().isLockSoldier)
                     {
-                        freeSoldiers[0].FindNearbyEnemy(detectedEnemies[enemyIndex].GetComponent<EnemyMovement>());
+                        freeSoldiers[0].FindNearbyEnemy(enemy.GetComponent<EnemyMovement>());
                         break;
                     }
                 }
@@ -77,5 +97,17 @@ public class BarracksTower : Tower
     {
         freeSoldiers.Remove(soldier);
     }
+    
+    private void TowerInit()
+    {
+        soldierDamage = barracksTowerSettings.damageByLevels[towerLevel];
+        towerRange = barracksTowerSettings.towerRangeByLevels[towerLevel];
+        soldierFireRate = barracksTowerSettings.fireRateByLevels[towerLevel];
+        foreach (var soldier in soldiers)
+        {
+            soldier.SoldierInit(soldierDamage,soldierFireRate);
+        }
+    }
+    
     
 }

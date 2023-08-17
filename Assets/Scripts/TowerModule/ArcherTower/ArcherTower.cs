@@ -9,9 +9,14 @@ public class ArcherTower : Tower
     [SerializeField] private List<Archer> archers;
 
     private bool canFire = true;
-    private void Start()
+    private int damage;
+    private float fireRate;
+
+    [SerializeField] private TowerSettings archerTowerSettings;
+    private void OnEnable()
     {
         towerLevel = 0;
+        TowerInit();
     }
 
     private void Update()
@@ -20,12 +25,25 @@ public class ArcherTower : Tower
         Attack();
     }
 
+    public override void Sell()
+    {
+        archerTowerLevels[towerLevel].SetActive(false);
+        archerTowerLevels[0].SetActive(true);
+        archers.Clear();
+        towerLevel = 0;
+        canFire = true;
+        gameObject.SetActive(false);
+    }
+    
     public override void LevelUp()
     {
+        archers.Clear();
         towerLevel++;
         archerTowerLevels[towerLevel].SetActive(true);
         archerTowerLevels[towerLevel - 1].SetActive(false);
-        archers.Clear();
+        towerLevelUpAnim.DORestart();
+        towerUpgradeCost += toAddTowerUpgradeCost;
+        TowerInit();
     }
 
     public override void Attack()
@@ -34,7 +52,7 @@ public class ArcherTower : Tower
         {
             target = closestEnemy;
             foreach (var archer in archers)
-                archer.Attack(target);
+                archer.Attack(target,damage);
             StartCoroutine(AttackDelay());
             canFire = false;
         }
@@ -42,12 +60,19 @@ public class ArcherTower : Tower
 
     IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(fireRate);
         canFire = true;
     }
 
     public void AddArcherToTower(Archer archer)
     {
         archers.Add(archer);
+    }
+
+    private void TowerInit()
+    {
+        damage = archerTowerSettings.damageByLevels[towerLevel];
+        towerRange = archerTowerSettings.towerRangeByLevels[towerLevel];
+        fireRate = archerTowerSettings.fireRateByLevels[towerLevel];
     }
 }

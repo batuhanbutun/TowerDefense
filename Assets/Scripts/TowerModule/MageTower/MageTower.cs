@@ -9,16 +9,21 @@ public class MageTower : Tower
     [SerializeField] private GameObject mageSpellPrefab;
     [SerializeField] private Transform mageSpellShootingPos;
     
-    private int interval = 10;
-    private void Start()
+    
+    [SerializeField] private TowerSettings mageTowerSettings;
+    private int mageDamage;
+    private float fireRate;
+    private void OnEnable()
     {
         towerLevel = 0;
+        if(poolingManager == null)
+            poolingManager = PoolingManager.Instance;
+        TowerInit();
     }
     
     private void Update()
     {
-        if(Time.frameCount % interval == 0)
-            DetectEnemy();
+        DetectEnemy();
         Attack();
     }
     
@@ -27,6 +32,18 @@ public class MageTower : Tower
         towerLevel++;
         mageTowerLevels[towerLevel].SetActive(true);
         mageTowerLevels[towerLevel - 1].SetActive(false);
+        towerLevelUpAnim.DORestart();
+        towerUpgradeCost += toAddTowerUpgradeCost;
+        TowerInit();
+    }
+    
+    public override void Sell()
+    {
+        mageTowerLevels[towerLevel].SetActive(false);
+        mageTowerLevels[0].SetActive(true);
+        towerLevel = 0;
+        gameObject.SetActive(false);
+        canFire = true;
     }
     
     public override void Attack()
@@ -34,18 +51,24 @@ public class MageTower : Tower
         if (detectedEnemies.Length > 0 && canFire)
         {
             target = closestEnemy;
-            GameObject mageSpellGO = Instantiate(mageSpellPrefab, mageSpellShootingPos.position, mageSpellPrefab.transform.rotation);
+            GameObject mageSpellGO = poolingManager.SpawnFromPool("magespell", mageSpellShootingPos.position, transform.rotation);
             MageSpell mageSpell = mageSpellGO.GetComponent<MageSpell>();
             if(mageSpell != null)
-                mageSpell.Seek(target);
+                mageSpell.Seek(target,mageDamage);
             StartCoroutine(AttackDelay());
             canFire = false;
         }
     }
-    
     IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(fireRate);
         canFire = true;
+    }
+    
+    private void TowerInit()
+    {
+        mageDamage = mageTowerSettings.damageByLevels[towerLevel];
+        towerRange = mageTowerSettings.towerRangeByLevels[towerLevel];
+        fireRate = mageTowerSettings.fireRateByLevels[towerLevel];
     }
 }

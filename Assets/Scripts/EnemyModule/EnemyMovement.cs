@@ -2,23 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions.Must;
 
 public class EnemyMovement : MonoBehaviour
 {
     [SerializeField] public Animator myAnimator;
     private Transform movementTarget;
     private int waypointIndex = 0;
-    private float movementSpeed = 1f;
+    public float movementSpeed = 1f;
 
     public bool isLockSoldier = false;
     private bool isAttacking = false;
     
     public bool canMove = true;
 
-   [SerializeField] private EnemyAttack enemyAttack;
-    private void Start()
+    [SerializeField] private EnemyAttack enemyAttack;
+    [SerializeField] private GameObject stunParticle;
+    
+    private void OnEnable()
     {
+        waypointIndex = 0;
         movementTarget = Waypoints.points[0];
     }
     
@@ -40,7 +42,7 @@ public class EnemyMovement : MonoBehaviour
         }
         else
         {
-            if (movementTarget == null)
+            if (!movementTarget.gameObject.activeInHierarchy)
             {
                 isLockSoldier = false;
                 ContinueToWaypoint();
@@ -72,7 +74,9 @@ public class EnemyMovement : MonoBehaviour
     {
         if (waypointIndex >= Waypoints.points.Length - 1)
         {
-            Destroy(gameObject);
+            GateHealth.Instance.GetDamage(10);
+            gameObject.SetActive(false);
+            waypointIndex = 0;
             return; 
         }
         waypointIndex++;
@@ -98,6 +102,22 @@ public class EnemyMovement : MonoBehaviour
         Quaternion lookRotation = Quaternion.LookRotation(movementDirection.normalized);
         transform.Translate(movementDirection.normalized * (movementSpeed * Time.deltaTime), Space.World );
         transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
+    }
+
+    public void GetStun(float stunDuration)
+    {
+        canMove = false;
+        myAnimator.SetTrigger("idle");
+        stunParticle.SetActive(true);
+        StartCoroutine(StunDelay(stunDuration));
+    }
+
+    IEnumerator StunDelay(float stunDuration)
+    {
+        yield return new WaitForSeconds(stunDuration);
+        canMove = true;
+        stunParticle.SetActive(false);
+        ContinueToWaypoint();
     }
     
 }

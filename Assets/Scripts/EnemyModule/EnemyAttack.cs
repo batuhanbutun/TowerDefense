@@ -7,8 +7,6 @@ public class EnemyAttack : MonoBehaviour
     [SerializeField] public Animator myAnimator;
     private bool canAttack = true;
 
-    protected int attackDamage;
-    
     public void Attack(Soldier soldier)
     {
         if (canAttack)
@@ -19,8 +17,7 @@ public class EnemyAttack : MonoBehaviour
             StartCoroutine(AttackDelay());
         }
     }
-    
-    
+
     IEnumerator AttackDelay()
     {
         yield return new WaitForSeconds(2f);

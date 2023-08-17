@@ -6,6 +6,9 @@ TagManager:
   tags:
   - buildarea
   - tower
+  - ground
+  - Enemy
+  - enemy
   layers:
   - Default
   - TransparentFX

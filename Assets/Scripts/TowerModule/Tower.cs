@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -15,24 +16,41 @@ public abstract class Tower : MonoBehaviour
 
     public Transform closestEnemy;
     private float closestDistance;
+    
+    protected int interval = 10;
+
+    public int towerUpgradeCost;
+    public int toAddTowerUpgradeCost;
+    
+    [SerializeField] private DOTweenAnimation towerSelectedAnim;
+    [SerializeField] protected DOTweenAnimation towerLevelUpAnim;
+    
+    protected PoolingManager poolingManager;
     public abstract void Attack();
     public abstract void LevelUp();
+    public abstract void Sell();
 
     public void DetectEnemy()
     {
-        detectedEnemies = Physics.OverlapSphere(transform.position, towerRange,detectionLayer);
-        closestDistance = 100f;
-        foreach (var enemy in detectedEnemies)
+        if (Time.frameCount % interval == 0)
         {
-            var newDistance = (enemy.transform.position - transform.position).sqrMagnitude;
-            if (newDistance < closestDistance)
+            detectedEnemies = Physics.OverlapSphere(transform.position, towerRange,detectionLayer);
+            closestDistance = 100f;
+            foreach (var enemy in detectedEnemies)
             {
-                closestEnemy = enemy.transform;
-                closestDistance = newDistance;
+                var newDistance = (enemy.transform.position - transform.position).sqrMagnitude;
+                if (newDistance < closestDistance)
+                {
+                    closestEnemy = enemy.transform;
+                    closestDistance = newDistance;
+                }
             }
         }
     }
+
+    public void PlaySelectedAnimation()
+    {
+        towerSelectedAnim.DOPlay();
+    }
     
-
-
 }

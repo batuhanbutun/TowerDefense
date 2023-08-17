@@ -12,10 +12,17 @@ public class Archer : MonoBehaviour
     [SerializeField] private Transform arrowShootingPos;
 
     [SerializeField] private ArcherTower myTower;
-    
+
+    private PoolingManager poolingManager;
+    private int arrowDamage;
     private void Start()
     {
         myAnimator = GetComponent<Animator>();
+        poolingManager = PoolingManager.Instance;
+    }
+
+    private void OnEnable()
+    {
         myTower.AddArcherToTower(this);
     }
 
@@ -25,11 +32,12 @@ public class Archer : MonoBehaviour
             transform.LookAt(enemyTarget.position);
     }
 
-    public void Attack(Transform target)
+    public void Attack(Transform target,int damage)
     {
         if (target != null)
         {
             enemyTarget = target;
+            arrowDamage = damage;
             myAnimator.SetTrigger("fire");
             StartCoroutine(ArrowDelay());
         }
@@ -38,11 +46,12 @@ public class Archer : MonoBehaviour
     IEnumerator ArrowDelay()
     {
         yield return new WaitForSeconds(0.25f);
-        GameObject arrowGO = Instantiate(arrowPrefab, arrowShootingPos.position, arrowPrefab.transform.rotation);
-        Arrow arrow = arrowGO.GetComponent<Arrow>();
-        if(arrow != null)
-            arrow.Seek(enemyTarget);
+        GameObject arrowGO = poolingManager.SpawnFromPool("arrow", arrowShootingPos.position, transform.rotation);
+        if (arrowGO != null)
+        {
+            Arrow arrow = arrowGO.GetComponent<Arrow>();
+            if(arrow != null)
+                arrow.Seek(enemyTarget,arrowDamage);
+        }
     }
-    
-    
 }

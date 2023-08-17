@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -20,6 +21,10 @@ public class Soldier : MonoBehaviour
     public bool isLockEnemy = false;
 
     private bool canAttack = true;
+    private int soldierLevel = 0;
+
+    private int damage;
+    private float attackRate;
     void Update()
     {
         Movement();
@@ -43,12 +48,13 @@ public class Soldier : MonoBehaviour
                     isLockEnemy = false;
                     myAnimator.SetTrigger("idle");
                     myAnimator.SetBool("walking",false);
+                    myTower.AddSoldierToReady(this);
                 }
             }
         } 
-        if (enemyTarget != null && isLockEnemy)
+        if (enemyTarget != null && isLockEnemy && !enemyHealth.isDead)
         {
-            if (Vector3.Distance(transform.position, enemyTarget.position) <= 0.3f)
+            if (Vector3.Distance(transform.position, enemyTarget.position) <= 0.3f )
             {
                 if (canAttack)
                 {
@@ -62,15 +68,16 @@ public class Soldier : MonoBehaviour
                 Vector3 movementDirection = enemyTarget.position - transform.position;
                 movementDirection.y = 0f;
                 Quaternion lookRotation = Quaternion.LookRotation(movementDirection.normalized);
-                transform.Translate(movementDirection.normalized * (movementSpeed * Time.deltaTime), Space.World );
+                //transform.Translate(movementDirection.normalized * (movementSpeed * Time.deltaTime), Space.World );
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-                myAnimator.SetBool("walking",true);
+                //myAnimator.SetBool("walking",true);
             }
         }
         else if (isLockEnemy)
         {
-            movementTarget = soldierFightPosition;
+            //movementTarget = soldierFightPosition;
             isLockEnemy = false;
+            myAnimator.SetTrigger("idle");
             myTower.AddSoldierToReady(this);
         }
     }
@@ -80,7 +87,6 @@ public class Soldier : MonoBehaviour
         transform.position = spawnPos.position;
         movementTarget = fightPosition;
         soldierFightPosition = fightPosition;
-        myTower.AddSoldierToReady(this);
     }
     
     public void FindNearbyEnemy(EnemyMovement enemy)
@@ -95,19 +101,40 @@ public class Soldier : MonoBehaviour
     private void Attack()
     {
         myAnimator.SetTrigger("attack");
-        enemyHealth.GetDamage(10);
+        enemyHealth.GetDamage(damage);
     }
 
     IEnumerator AttackDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(attackRate);
         canAttack = true;
     }
 
     public void SoldierLevelUp(int towerLevel)
     {
-        soldierLevels[towerLevel].SetActive(true);
-        soldierLevels[towerLevel - 1].SetActive(false);
+        soldierLevel = towerLevel;
+        soldierLevels[soldierLevel].SetActive(true);
+        soldierLevels[soldierLevel - 1].SetActive(false);
         myAnimator = soldierLevels[towerLevel].GetComponent<Animator>();
+    }
+
+    private void OnDisable()
+    {
+        movementTarget = soldierFightPosition;
+        transform.position =
+            new Vector3(myTower.transform.position.x, transform.position.y, myTower.transform.position.z);
+        isLockEnemy = false;
+        canAttack = true;
+        soldierLevels[soldierLevel].SetActive(false);
+        soldierLevels[0].SetActive(true);
+        myAnimator = soldierLevels[0].GetComponent<Animator>();
+        enemyTarget = null;
+        myTower.DeleteSoldierToReady(this);
+    }
+
+    public void SoldierInit(int soldierDamage, float fireRate)
+    {
+        damage = soldierDamage;
+        attackRate = fireRate;
     }
 }

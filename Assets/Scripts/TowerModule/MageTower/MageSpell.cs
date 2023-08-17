@@ -5,35 +5,39 @@ using UnityEngine;
 public class MageSpell : MonoBehaviour
 {
     private Transform enemyTarget;
+    private EnemyHealth enemyHealth;
     public float spellSpeed;
+    private int damage;
     void Update()
     {
-        if (enemyTarget == null)
+        if (enemyHealth.isDead)
         {
             Destroy(gameObject);
             return;
         }
-
         Vector3 movementDir = enemyTarget.position - transform.position;
         float distanceThisFrame = spellSpeed * Time.deltaTime;
 
         if (movementDir.magnitude <= distanceThisFrame)
         {
-            HitTarget(enemyTarget);
+            HitTarget();
             return;
         }
         transform.Translate(movementDir.normalized * distanceThisFrame,Space.World);
     }
 
-    private void HitTarget(Transform target)
+    private void HitTarget()
     {
-        Debug.Log("Hitting Mage");
-        target.gameObject.GetComponent<EnemyHealth>().GetDamage(50);
-        Destroy(gameObject);
+        enemyHealth.GetDamage(damage);
+        ParticleManager.Instance.PlayMageParticle(enemyTarget.position + new Vector3(0f,0.5f,0f));
+        PoolingManager.Instance.GoToPool("magespell",this.gameObject);
+        gameObject.SetActive(false);
     }
 
-    public void Seek(Transform target)
+    public void Seek(Transform target, int mageDamage)
     {
         enemyTarget = target;
+        enemyHealth = enemyTarget.GetComponent<EnemyHealth>();
+        damage = mageDamage;
     }
 }
