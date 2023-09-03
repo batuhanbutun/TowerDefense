@@ -7,8 +7,6 @@ using UnityEngine;
 
 public class Shop : MonoBehaviour
 {
-    public static Shop Instance;
-    
     public int coin;
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TowerManager towerManager;
@@ -22,10 +20,6 @@ public class Shop : MonoBehaviour
     private bool isPanelOpen = false;
 
     public DOTweenAnimation coinAnimation;
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {
@@ -44,7 +38,8 @@ public class Shop : MonoBehaviour
             cannonTGray.SetActive(!HaveCoin(cannonTCost));
         }
         towerManager.CoinControl();
-        coinAnimation.DOPlay();
+        if(coinAnimation!= null)
+         coinAnimation.DOPlay();
     }
 
     public bool HaveCoin(int amount)

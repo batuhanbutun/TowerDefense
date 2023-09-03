@@ -20,6 +20,7 @@ public abstract class Tower : MonoBehaviour
     protected int interval = 10;
 
     public int towerUpgradeCost;
+    protected int towerUpgradeCostDefault;
     public int toAddTowerUpgradeCost;
     
     [SerializeField] private DOTweenAnimation towerSelectedAnim;
@@ -29,6 +30,11 @@ public abstract class Tower : MonoBehaviour
     public abstract void Attack();
     public abstract void LevelUp();
     public abstract void Sell();
+
+    private void Start()
+    {
+        towerUpgradeCostDefault = towerUpgradeCost;
+    }
 
     public void DetectEnemy()
     {

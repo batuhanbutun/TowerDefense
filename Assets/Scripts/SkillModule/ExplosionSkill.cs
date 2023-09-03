@@ -18,7 +18,7 @@ public class ExplosionSkill : Skill
         DetectEnemy();
         foreach (var enemy in detectedEnemies)
         {
-           enemy.GetComponent<EnemyHealth>().GetDamage(skillDamage); 
+           enemy.GetComponent<EnemyHealth>().GetDamage(skillDamage,false,true); 
         }
         isSkillReady = false;
         timeDuration = 0f;

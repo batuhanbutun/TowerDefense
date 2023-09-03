@@ -8,11 +8,21 @@ public class MageSpell : MonoBehaviour
     private EnemyHealth enemyHealth;
     public float spellSpeed;
     private int damage;
+    
+    private PoolingManager poolingManager;
+    private ParticleManager particleManager;
+    private void Start()
+    {
+        poolingManager = PoolingManager.Instance;
+        particleManager = ParticleManager.Instance;
+    }
+    
     void Update()
     {
         if (enemyHealth.isDead)
         {
-            Destroy(gameObject);
+            PoolingManager.Instance.GoToPool("magespell",this.gameObject);
+            gameObject.SetActive(false);
             return;
         }
         Vector3 movementDir = enemyTarget.position - transform.position;
@@ -28,9 +38,9 @@ public class MageSpell : MonoBehaviour
 
     private void HitTarget()
     {
-        enemyHealth.GetDamage(damage);
-        ParticleManager.Instance.PlayMageParticle(enemyTarget.position + new Vector3(0f,0.5f,0f));
-        PoolingManager.Instance.GoToPool("magespell",this.gameObject);
+        enemyHealth.GetDamage(damage,true,false);
+        particleManager.PlayMageParticle(enemyTarget.position + new Vector3(0f,0.5f,0f));
+        poolingManager.GoToPool("magespell",this.gameObject);
         gameObject.SetActive(false);
     }
 

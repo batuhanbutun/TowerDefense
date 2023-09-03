@@ -9,11 +9,11 @@ public class WaveManager : MonoBehaviour
     [System.Serializable]
     public class WaveSettings
     {
-        public int spiderCount;
-        public int magmaCount;
-        public int golemCount;
-        public int beeCount;
-        public int wolfCount;
+        public int spider;
+        public int magma;
+        public int golem;
+        public int bee;
+        public int wolf;
         public int totalUnitCountThisWave;
     }
 
@@ -25,6 +25,7 @@ public class WaveManager : MonoBehaviour
     private PoolingManager poolingManager;
 
     private int currentDifficulty = 1;
+    private int maxWaveCount;
     public enum enemyTypes
     {
         spider,
@@ -36,6 +37,7 @@ public class WaveManager : MonoBehaviour
     
     private void Start()
     {
+        maxWaveCount = waves.Count;
         poolingManager = PoolingManager.Instance;
         StartCoroutine(SpawnEnemy());
     }
@@ -46,12 +48,11 @@ public class WaveManager : MonoBehaviour
         while (enemyCountCurrentWave < waves[waveNumber].totalUnitCountThisWave)
         {
             yield return new WaitForSeconds(2f);
-            poolingManager.SpawnFromPool(Enum.GetName(typeof(enemyTypes),Random.Range(0,currentDifficulty)),spawnPos.position,spawnPos.rotation);
+            poolingManager.SpawnFromPool(SpawnEnemyFromWave(),spawnPos.position,spawnPos.rotation);
             enemyCountCurrentWave++;
             if (enemyCountCurrentWave == waves[waveNumber].totalUnitCountThisWave)
             {
                 StartCoroutine(WaveComplete());
-                Debug.Log("dalga bitti");
             }
         }
     }
@@ -62,8 +63,40 @@ public class WaveManager : MonoBehaviour
         enemyCountCurrentWave = 0;
         currentDifficulty++;
         waveNumber++;
-        StartCoroutine(SpawnEnemy());
-        Debug.Log("yeni dalga basladi");
+        if(waveNumber < maxWaveCount)
+            StartCoroutine(SpawnEnemy());
+    }
+
+    public string SpawnEnemyFromWave()
+    {
+        int enemyNo = 0;
+        if (waves[waveNumber].spider > 0)
+        {
+            enemyNo = 0;
+            waves[waveNumber].spider--;
+        }
+        else if (waves[waveNumber].wolf > 0)
+        {
+            enemyNo = 1;
+            waves[waveNumber].wolf--;
+        }
+        else if (waves[waveNumber].magma > 0)
+        {
+            enemyNo = 2;
+            waves[waveNumber].magma--;
+        }
+        else if (waves[waveNumber].bee > 0)
+        {
+            enemyNo = 3;
+            waves[waveNumber].bee--;
+        }
+        else if (waves[waveNumber].golem > 0)
+        {
+            waves[waveNumber].golem--;
+            enemyNo = 4;
+        }
+        
+        return Enum.GetName(typeof(enemyTypes), enemyNo);
     }
     
 }

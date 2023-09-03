@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c065cd0548041e47b9ef1f256e7c0cc, type: 3}
   m_Name: Mage Tower Settings
   m_EditorClassIdentifier: 
-  _damageByLevels: 0a0000001400000032000000
+  _damageByLevels: 0f0000001400000028000000
   _towerRangeByLevels:
   - 4
   - 5
-  - 6
+  - 5
   _fireRateByLevels:
   - 1.4
-  - 1.3
-  - 1.2
+  - 1.1
+  - 0.9

@@ -14289,8 +14289,13 @@ MonoBehaviour:
   myCollider: {fileID: 4680238951732892566}
   myMovementScript: {fileID: 4680238951732892564}
   poisonedParticle: {fileID: 2354222104772024532}
+  maxHealth: 2000
   isDead: 0
+  coinValue: 100
   enemyType: golem
+  magicResist: 0
+  armor: 0
+  tag: golem
 --- !u!114 &4680238951732892560
 MonoBehaviour:
   m_ObjectHideFlags: 0

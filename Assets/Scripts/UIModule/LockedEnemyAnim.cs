@@ -6,9 +6,10 @@ using UnityEngine;
 public class LockedEnemyAnim : MonoBehaviour
 {
     public Animator myAnim;
+    private static readonly int İdle = Animator.StringToHash("idle");
 
     private void Start()
     {
-        myAnim.SetTrigger("idle");
+        myAnim.SetTrigger(İdle);
     }
 }

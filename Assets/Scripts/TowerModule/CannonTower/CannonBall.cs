@@ -16,6 +16,15 @@ public class CannonBall : MonoBehaviour
     public float explosionRange;
     public LayerMask explosionLayer;
     public int damage;
+    
+    private PoolingManager poolingManager;
+    private ParticleManager particleManager;
+    private void Start()
+    {
+        poolingManager = PoolingManager.Instance;
+        particleManager = ParticleManager.Instance;
+    }
+    
     private void Update() 
     {
         progress = Mathf.Min(progress + Time.deltaTime * stepScale, 1.0f);
@@ -33,12 +42,12 @@ public class CannonBall : MonoBehaviour
         enemiesNearExplosion = Physics.OverlapSphere(transform.position, explosionRange,explosionLayer);
         foreach (var enemy in enemiesNearExplosion)
         {
-            enemy.GetComponent<EnemyHealth>().GetDamage(damage);
+            enemy.GetComponent<EnemyHealth>().GetDamage(damage,false,true);
         }
         progress = 0f;
         arcHeight = 0.5f;
-        ParticleManager.Instance.PlayExplosionParticle(transform.position);
-        PoolingManager.Instance.GoToPool("cannonball",this.gameObject);
+        particleManager.PlayExplosionParticle(transform.position);
+        poolingManager.GoToPool("cannonball",this.gameObject);
         gameObject.SetActive(false);
     }
 

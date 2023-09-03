@@ -18,8 +18,8 @@ public class BuildingManager : MonoBehaviour
     
     private void OnEnable()
     {
-        if(shop == null)
-            shop = Shop.Instance;
+        if (shop == null)
+            shop = FindObjectOfType<Shop>();
         closePanels += CloseBuildingMenu;
     }
 
@@ -33,7 +33,7 @@ public class BuildingManager : MonoBehaviour
         selectedBuildingArea = buildingArea;
         if (!selectedBuildingArea.isBuildingComplete)
         {
-            Shop.Instance.OpenBuildingPanel();
+            shop.OpenBuildingPanel();
             selectedBuildingArea.transform.GetComponent<DOTweenAnimation>().DOPlay();
         }
     }
@@ -41,7 +41,7 @@ public class BuildingManager : MonoBehaviour
     public void CloseBuildingMenu()
     {
         selectedBuildingArea = null;
-        Shop.Instance.CloseBuildingPanel();
+        shop.CloseBuildingPanel();
     }
 
     public void BuildTower(int buildingNo)

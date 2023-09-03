@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3c065cd0548041e47b9ef1f256e7c0cc, type: 3}
   m_Name: Cannon Tower Settings
   m_EditorClassIdentifier: 
-  _damageByLevels: 1e0000003200000064000000
+  _damageByLevels: 1e0000003200000037000000
   _towerRangeByLevels:
   - 4
   - 5
-  - 6
+  - 5
   _fireRateByLevels:
-  - 1.5
-  - 1.5
-  - 1
+  - 6
+  - 5
+  - 4.5

@@ -32,6 +32,7 @@ public class ArcherTower : Tower
         archers.Clear();
         towerLevel = 0;
         canFire = true;
+        towerUpgradeCost = towerUpgradeCostDefault;
         gameObject.SetActive(false);
     }
     

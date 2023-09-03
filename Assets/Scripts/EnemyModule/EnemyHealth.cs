@@ -17,17 +17,22 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] private GameObject poisonedParticle;
     
     //Health Settings
-    private float maxHealth = 100;
-    private float currentHealth = 100;
+    public float maxHealth = 100;
+    private float currentHealth;
     public bool isDead = false;
     private Shop shop;
 
-    private int coinValue = 20;
+    public int coinValue = 20;
 
     public string enemyType;
+
+    public int magicResist;
+    public int armor;
+
+    public string tag;
     private void Start()
     {
-        shop = Shop.Instance;
+        shop = FindObjectOfType<Shop>();
         if (PlayerPrefs.GetInt(enemyType) != 3)
         {
             LockedEnemyCard.Instance.OpenCard(enemyType);
@@ -37,16 +42,27 @@ public class EnemyHealth : MonoBehaviour
 
     private void OnEnable()
     {
-        currentHealth = 100;
+        currentHealth = maxHealth;
         myMovementScript.canMove = true;
         healthBar.fillAmount = (currentHealth / maxHealth);
         myCollider.enabled = true;
         isDead = false;
     }
 
-    public void GetDamage(int damageAmount)
+    public void GetDamage(int damageAmount,bool isMagicDamage,bool isTrueDamage)
     {
-        currentHealth -= damageAmount;
+        if (isTrueDamage)
+            currentHealth -= damageAmount;
+        else
+        { 
+            if (isMagicDamage)
+                damageAmount -= magicResist;
+            else
+                damageAmount -= armor;
+            if (damageAmount <= 0)
+                damageAmount = 10;
+            currentHealth -= damageAmount;
+        } 
         healthBar.fillAmount = (currentHealth / maxHealth);
         if (currentHealth <= 0)
         {
@@ -63,6 +79,7 @@ public class EnemyHealth : MonoBehaviour
         poisonedParticle.SetActive(false);
         StartCoroutine(DeathDelay());
         ParticleManager.Instance.PlayBloodParticle(transform.position);
+        PoolingManager.Instance.GoToPool(tag,this.gameObject);
         shop.EarnCoin(coinValue);
     }
 
@@ -77,7 +94,7 @@ public class EnemyHealth : MonoBehaviour
         while (!isDead)
         {
             yield return new WaitForSeconds(0.2f);
-            GetDamage(damageAmount);
+            GetDamage(damageAmount,false,true);
         }
     }
     

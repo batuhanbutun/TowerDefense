@@ -42,6 +42,7 @@ public class MageTower : Tower
         mageTowerLevels[towerLevel].SetActive(false);
         mageTowerLevels[0].SetActive(true);
         towerLevel = 0;
+        towerUpgradeCost = towerUpgradeCostDefault;
         gameObject.SetActive(false);
         canFire = true;
     }

@@ -21,7 +21,7 @@ public class TowerManager : MonoBehaviour
 
     private void OnEnable()
     {
-        shop = Shop.Instance;
+        shop = FindObjectOfType<Shop>();
         BuildingManager.closePanels += CloseTowerPanel;
     }
 
@@ -68,13 +68,13 @@ public class TowerManager : MonoBehaviour
 
     public void SellTower()
     {
+        BuildingManager.closePanels();
         selectedTower.GetComponentInParent<Tower>().Sell();
         selectedTower.GetComponentInParent<Build>().SellTower();
         shop.EarnCoin(100);
-        BuildingManager.closePanels();
     }
 
-    public void CloseTowerPanel()
+    private void CloseTowerPanel()
     {
         towerPanel.gameObject.SetActive(false);
         isPanelOpen = false;

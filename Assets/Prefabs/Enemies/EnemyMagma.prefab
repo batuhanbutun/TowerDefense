@@ -373,8 +373,13 @@ MonoBehaviour:
   myCollider: {fileID: 957526216351219666}
   myMovementScript: {fileID: 957526216351219664}
   poisonedParticle: {fileID: 6902593933144733256}
+  maxHealth: 200
   isDead: 0
+  coinValue: 30
   enemyType: magma
+  magicResist: 0
+  armor: 15
+  tag: magma
 --- !u!114 &957526216351219668
 MonoBehaviour:
   m_ObjectHideFlags: 0

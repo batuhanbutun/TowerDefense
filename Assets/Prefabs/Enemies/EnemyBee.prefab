@@ -5076,7 +5076,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myAnimator: {fileID: 8115037017014737960}
-  movementSpeed: 0.5
+  movementSpeed: 1.5
   isLockSoldier: 0
   canMove: 1
   enemyAttack: {fileID: 4860077945666526137}
@@ -5098,8 +5098,13 @@ MonoBehaviour:
   myCollider: {fileID: 4860077945666526143}
   myMovementScript: {fileID: 4860077945666526141}
   poisonedParticle: {fileID: 6063612625842714025}
+  maxHealth: 35
   isDead: 0
+  coinValue: 10
   enemyType: bee
+  magicResist: 0
+  armor: 0
+  tag: bee
 --- !u!114 &4860077945666526137
 MonoBehaviour:
   m_ObjectHideFlags: 0

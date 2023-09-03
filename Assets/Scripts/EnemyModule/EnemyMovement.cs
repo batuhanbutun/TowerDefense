@@ -18,6 +18,9 @@ public class EnemyMovement : MonoBehaviour
     [SerializeField] private EnemyAttack enemyAttack;
     [SerializeField] private GameObject stunParticle;
     
+    private static readonly int Idle = Animator.StringToHash("idle");
+    private static readonly int Walk = Animator.StringToHash("walk");
+
     private void OnEnable()
     {
         waypointIndex = 0;
@@ -86,7 +89,7 @@ public class EnemyMovement : MonoBehaviour
     private void ContinueToWaypoint()
     {
         movementTarget = Waypoints.points[waypointIndex];
-        myAnimator.SetTrigger("walk");
+        myAnimator.SetTrigger(Walk);
     }
     
     public void SetTarget(Soldier soldier)
@@ -107,7 +110,7 @@ public class EnemyMovement : MonoBehaviour
     public void GetStun(float stunDuration)
     {
         canMove = false;
-        myAnimator.SetTrigger("idle");
+        myAnimator.SetTrigger(Idle);
         stunParticle.SetActive(true);
         StartCoroutine(StunDelay(stunDuration));
     }

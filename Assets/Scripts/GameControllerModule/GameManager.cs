@@ -18,7 +18,10 @@ public class GameManager : MonoBehaviour
     public Skill selectedSkill;
     public bool isSkillSelected = false;
 
-    public bool test;
+    private void Start()
+    {
+        Application.targetFrameRate = 60;
+    }
 
     private void OnEnable()
     {
@@ -32,8 +35,7 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        if(test)
-            InputHandler();
+        InputHandler();
     }
 
     private void InputHandler()
@@ -60,7 +62,7 @@ public class GameManager : MonoBehaviour
             }
             else if (hit.transform.CompareTag("ground") || hit.transform.CompareTag("enemy"))
             {
-                BuildingManager.closePanels();
+                if (BuildingManager.closePanels != null) BuildingManager.closePanels();
                 if (isSkillSelected)
                 {
                     selectedSkill.CastSkill(hit.point);

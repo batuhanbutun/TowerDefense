@@ -7357,8 +7357,13 @@ MonoBehaviour:
   myCollider: {fileID: 3735575370118826609}
   myMovementScript: {fileID: 3735575370118826611}
   poisonedParticle: {fileID: 6359957163027991164}
+  maxHealth: 140
   isDead: 0
+  coinValue: 20
   enemyType: spider
+  magicResist: 10
+  armor: 0
+  tag: spider
 --- !u!114 &3735575370118826615
 MonoBehaviour:
   m_ObjectHideFlags: 0

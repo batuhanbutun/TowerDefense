@@ -4799,7 +4799,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   myAnimator: {fileID: 4426380861562429009}
-  movementSpeed: 0.5
+  movementSpeed: 2
   isLockSoldier: 0
   canMove: 1
   enemyAttack: {fileID: 1146202468642034788}
@@ -4821,8 +4821,13 @@ MonoBehaviour:
   myCollider: {fileID: 1146202468642034786}
   myMovementScript: {fileID: 1146202468642034784}
   poisonedParticle: {fileID: 4163565613836358160}
+  maxHealth: 50
   isDead: 0
+  coinValue: 10
   enemyType: wolf
+  magicResist: 0
+  armor: 0
+  tag: wolf
 --- !u!114 &1146202468642034788
 MonoBehaviour:
   m_ObjectHideFlags: 0

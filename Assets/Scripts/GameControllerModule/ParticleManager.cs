@@ -30,10 +30,8 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayExplosionParticle(Vector3 explosionPosition)
     {
-        explosionParticles[explosionParticleIndex].transform.position = explosionPosition;
-        cannonParticles[explosionParticleIndex].transform.position = explosionPosition;
-        cannonParticles[explosionParticleIndex].Play();
-        explosionParticles[explosionParticleIndex].Play();
+        PlayParticle(explosionParticles[explosionParticleIndex],explosionPosition);
+        PlayParticle(cannonParticles[explosionParticleIndex],explosionPosition);
         explosionParticleIndex++;
         if (explosionParticleIndex > explosionParticleCount)
             explosionParticleIndex = 0;
@@ -45,8 +43,7 @@ public class ParticleManager : MonoBehaviour
         if (canSpawnParticle)
         {
             canSpawnParticle = false;
-            mageParticles[mageParticleIndex].transform.position = mageParticlePosition;
-            mageParticles[mageParticleIndex].Play();
+            PlayParticle(mageParticles[mageParticleIndex], mageParticlePosition);
             mageParticleIndex++;
             if (mageParticleIndex > mageParticleCount)
                 mageParticleIndex = 0;
@@ -54,13 +51,12 @@ public class ParticleManager : MonoBehaviour
         }
     }
     
-    public void PlayArrowParticle(Vector3 mageParticlePosition)
+    public void PlayArrowParticle(Vector3 arrowParticlePosition)
     {
         if (canSpawnParticle)
         {
             canSpawnParticle = false;
-            arrowParticles[arrowParticleIndex].transform.position = mageParticlePosition;
-            arrowParticles[arrowParticleIndex].Play();
+            PlayParticle(arrowParticles[arrowParticleIndex], arrowParticlePosition);
             arrowParticleIndex++;
             if (arrowParticleIndex > arrowParticleCount)
                 arrowParticleIndex = 0;
@@ -70,19 +66,23 @@ public class ParticleManager : MonoBehaviour
 
     public void PlayBloodParticle(Vector3 bloodPosition)
     {
-        coinParticles[bloodParticleIndex].transform.position = bloodPosition;
+        PlayParticle(coinParticles[bloodParticleIndex], bloodPosition);
         bloodPosition.y -= 0.16f;
-        bloodParticles[bloodParticleIndex].transform.position = bloodPosition;
-        coinParticles[bloodParticleIndex].Play();
-        bloodParticles[bloodParticleIndex].Play();
+        PlayParticle(bloodParticles[bloodParticleIndex], bloodPosition);
         bloodParticleIndex++;
         if (bloodParticleIndex > bloodParticleCount)
             bloodParticleIndex = 0;
     }
 
+    private void PlayParticle(ParticleSystem particleSystem,Vector3 spawnPos)
+    {
+        particleSystem.transform.position = spawnPos;
+        particleSystem.Play();
+    }
+
     IEnumerator ParticleDelay()
     {
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(0.5f);
         canSpawnParticle = true;
     }
     

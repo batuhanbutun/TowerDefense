@@ -68,14 +68,11 @@ public class Soldier : MonoBehaviour
                 Vector3 movementDirection = enemyTarget.position - transform.position;
                 movementDirection.y = 0f;
                 Quaternion lookRotation = Quaternion.LookRotation(movementDirection.normalized);
-                //transform.Translate(movementDirection.normalized * (movementSpeed * Time.deltaTime), Space.World );
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f);
-                //myAnimator.SetBool("walking",true);
             }
         }
         else if (isLockEnemy)
         {
-            //movementTarget = soldierFightPosition;
             isLockEnemy = false;
             myAnimator.SetTrigger("idle");
             myTower.AddSoldierToReady(this);
@@ -101,7 +98,7 @@ public class Soldier : MonoBehaviour
     private void Attack()
     {
         myAnimator.SetTrigger("attack");
-        enemyHealth.GetDamage(damage);
+        enemyHealth.GetDamage(damage,false,false);
     }
 
     IEnumerator AttackDelay()

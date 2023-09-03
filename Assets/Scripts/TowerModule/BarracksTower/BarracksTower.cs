@@ -12,12 +12,8 @@ public class BarracksTower : Tower
     [SerializeField] private Transform soldierSwapningPos;
     
     public List<Soldier> freeSoldiers;
-    private bool canSpawnSoldier = true;
-    private bool isSoldierFree = true;
 
     private int soldierIndex = 0;
-    private int SetTargetDelay = 10;
-
     
     [SerializeField] private TowerSettings barracksTowerSettings;
     private int soldierDamage;
@@ -54,6 +50,7 @@ public class BarracksTower : Tower
         barracksTowerLevels[towerLevel].SetActive(false);
         barracksTowerLevels[0].SetActive(true);
         towerLevel = 0;
+        towerUpgradeCost = towerUpgradeCostDefault;
         gameObject.SetActive(false);
         soldierIndex = 0;
         foreach (var soldier in soldiers)
@@ -75,7 +72,6 @@ public class BarracksTower : Tower
         {
             if (detectedEnemies.Length > 0)
             {
-                int enemyIndex = 0;
                 foreach (var enemy in detectedEnemies)
                 {
                     if (!enemy.GetComponent<EnemyMovement>().isLockSoldier)

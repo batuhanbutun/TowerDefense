@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,12 +8,17 @@ public class Build : MonoBehaviour
     [SerializeField] private GameObject archerTower, mageTower, cannonTower, barracks, emptyArea;
     [SerializeField] private ParticleSystem buildParticle;
     public bool isBuildingComplete;
-    
-    
-    public void OpenArcherTower() { archerTower.SetActive(true);}
-    public void OpenMageTower() { mageTower.SetActive(true); }
-    public void OpenCannonTower() { cannonTower.SetActive(true);}
-    public void OpenBarracks() { barracks.SetActive(true); }
+
+    private Shop shop;
+    private void OpenArcherTower() { archerTower.SetActive(true);}
+    private void OpenMageTower() { mageTower.SetActive(true); }
+    private void OpenCannonTower() { cannonTower.SetActive(true);}
+    private void OpenBarracks() { barracks.SetActive(true); }
+
+    private void Start()
+    {
+        shop = FindObjectOfType<Shop>();
+    }
 
     public void BuildTower(int buildingNo)
     {
@@ -21,18 +27,18 @@ public class Build : MonoBehaviour
         {
             case 0:
                 OpenArcherTower();
-                Shop.Instance.SpendCoin(Shop.Instance.archerTCost);
+                shop.SpendCoin(shop.archerTCost);
                 break;
             case 1:
-                Shop.Instance.SpendCoin(Shop.Instance.barracksTCost);
+                shop.SpendCoin(shop.barracksTCost);
                 OpenBarracks();
                 break;
             case 2:
-                Shop.Instance.SpendCoin(Shop.Instance.mageTCost);
+                shop.SpendCoin(shop.mageTCost);
                 OpenMageTower();
                 break;
             case 3:
-                Shop.Instance.SpendCoin(Shop.Instance.cannonTCost);
+                shop.SpendCoin(shop.cannonTCost);
                 OpenCannonTower();
                 break;
         }

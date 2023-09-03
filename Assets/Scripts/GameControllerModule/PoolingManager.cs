@@ -38,7 +38,6 @@ public class PoolingManager : MonoBehaviour
                 obj.SetActive(false);
                 objectPool.Enqueue(obj);
             }
-            
             poolDictionary.Add(pool.tag,objectPool);
         }
     }

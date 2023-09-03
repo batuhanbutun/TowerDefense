@@ -6,9 +6,7 @@ public class LockedEnemyCard : MonoBehaviour
 {
    [SerializeField] private GameObject rawImage;
    [SerializeField] private GameObject rawImageCamera;
-  //[SerializeField] private GameObject lockedSpiderCard,lockedGolemCard,lockedBeeCard,lockedMagmaCard,lockedWolfCard;
-  //[SerializeField] private GameObject lockedSpider,lockedGolem,lockedBee,lockedMagma,lockedWolf;
-   
+
    [System.Serializable]
    public class LockedEnemy
    {

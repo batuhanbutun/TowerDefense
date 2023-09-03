@@ -15,6 +15,8 @@ public class Archer : MonoBehaviour
 
     private PoolingManager poolingManager;
     private int arrowDamage;
+    private static readonly int Fire = Animator.StringToHash("fire");
+
     private void Start()
     {
         myAnimator = GetComponent<Animator>();
@@ -38,7 +40,7 @@ public class Archer : MonoBehaviour
         {
             enemyTarget = target;
             arrowDamage = damage;
-            myAnimator.SetTrigger("fire");
+            myAnimator.SetTrigger(Fire);
             StartCoroutine(ArrowDelay());
         }
     }

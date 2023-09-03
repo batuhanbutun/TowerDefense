@@ -15,12 +15,21 @@ public class Arrow : MonoBehaviour
     private float progress;
     private int damage;
 
+    private PoolingManager poolingManager;
+    private ParticleManager particleManager;
+    private void Start()
+    {
+        poolingManager = PoolingManager.Instance;
+        particleManager = ParticleManager.Instance;
+    }
+
     void Update() {
         if (target != null)
         {
             if (enemyHealth.isDead)
             {
-                Destroy(gameObject);
+                poolingManager.GoToPool("arrow",this.gameObject);
+                gameObject.SetActive(false);
                 return;
             }
             progress = Mathf.Min(progress + Time.deltaTime * stepScale, 1.0f);
@@ -36,12 +45,12 @@ public class Arrow : MonoBehaviour
 
     private void Arrived(Transform target)
     {
-        target.gameObject.GetComponent<EnemyHealth>().GetDamage(damage);
+        target.gameObject.GetComponent<EnemyHealth>().GetDamage(damage,false,false);
         progress = 0;
         arcHeight = 0.5f;
-        ParticleManager.Instance.PlayArrowParticle(target.position + new Vector3(0f,0.35f,0f));
+        particleManager.PlayArrowParticle(target.position + new Vector3(0f,0.35f,0f));
+        poolingManager.GoToPool("arrow",this.gameObject);
         gameObject.SetActive(false);
-        PoolingManager.Instance.GoToPool("arrow",this.gameObject);
     }
 
     public void Seek(Transform enemyTarget,int arrowDamage)

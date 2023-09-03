@@ -43,6 +43,7 @@ public class CannonTower : Tower
         cannonTowerLevels[towerLevel].SetActive(false);
         cannonTowerLevels[0].SetActive(true);
         towerLevel = 0;
+        towerUpgradeCost = towerUpgradeCostDefault;
         gameObject.SetActive(false);
         canFire = true;
     }
